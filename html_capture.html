@@ -17,6 +17,7 @@
 			width: 100%;
 			height: 100%;
 			background: white;
+			display: none;
 		}
 	</style>
 </head>
@@ -289,13 +290,12 @@ $(document).ready(function(){
 								'room':$("#room").text(),
 								'imageURL': largeUrl,
 								'previewURL':snapshot.downloadURL
+							},
+							sunccess:function(){
+								$("body").append("<p id='success-mark'>Success</p>")
 							}
 						});
-
-						$("body").append("<p id='success-mark'>Success</p>")
 						
-						window.open('','_parent',''); 
-						window.close(); 
 			});
 		})
 
