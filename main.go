@@ -16,7 +16,16 @@ func main() {
 
 func testong(w http.ResponseWriter, r *http.Request) {
 
-	//w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	err := r.ParseForm()
+	if err != nil {
+		return
+	}
+
+	token := r.Form["token"][0]
+	userId := r.Form["userId"][0]
+	roomId := r.Form["roomId"][0]
+	groupId := r.Form["groupId"][0]
+
 	tempt, err := template.New("html_capture.html").ParseFiles("html_capture.html")
 	if err != nil {
 		fmt.Println(err.Error())
@@ -24,6 +33,9 @@ func testong(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tempt.Execute(w, map[string]interface{}{
-		"token": "hahahah",
+		"ReqToken": token,
+		"ReqUser":  userId,
+		"ReqRoom":  roomId,
+		"ReqGroup": groupId,
 	})
 }

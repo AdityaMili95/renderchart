@@ -17,6 +17,7 @@
 			width: 100%;
 			height: 100%;
 			background: white;
+			display: none;
 		}
 	</style>
 </head>
@@ -25,6 +26,11 @@
 <script src="https://www.gstatic.com/firebasejs/4.6.1/firebase.js"></script>
 <script type="text/javascript" src=""></script>
 <body>
+
+<p id="token">{{.ReqToken}}</p>
+<p id="user">{{.ReqUser}}</p>
+<p id="room">{{.ReqRoom}}</p>
+<p id="group">{{.ReqGroup}}</p>
 
 <div id="image"></div>
 
@@ -278,7 +284,10 @@ $(document).ready(function(){
 							url:"https://wallte.herokuapp.com/replyImage",
 							type:"POST",
 							data:{
-								'token':$("#token").val(),
+								'token':$("#token").text(),
+								'user':$("#user").text(),
+								'group':$("#group").text(),
+								'room':$("#room").text(),
 								'imageURL': largeUrl,
 								'previewURL':snapshot.downloadURL
 							}
@@ -309,9 +318,9 @@ $(document).ready(function(){
 	}
 
 	
-firebase.database().ref("/user/haha").set({
+*/firebase.database().ref("/user/haha").set({
 	json:"hahahah",
-});
+});*/
 
 
 	html2canvas($("#image"), {
