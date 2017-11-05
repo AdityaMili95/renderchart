@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/process", testong)
+	http.HandleFunc("/render_chart", testong)
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
