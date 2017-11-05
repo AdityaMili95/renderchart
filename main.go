@@ -21,10 +21,39 @@ func testong(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token := r.Form["token"][0]
-	userId := r.Form["userId"][0]
-	roomId := r.Form["roomId"][0]
-	groupId := r.Form["groupId"][0]
+	token := ""
+	userId := ""
+	roomId := ""
+	groupId := ""
+	valid := false
+
+	tempToken := r.Form["token"]
+	tempUserId := r.Form["userId"]
+	tempRoomId := r.Form["roomId"]
+	tempGroupId := r.Form["groupId"]
+
+	if tempToken != nil {
+		token = tempToken[0]
+	}
+
+	if tempUserId != nil {
+		userId = tempUserId[0]
+		valid = true
+	}
+
+	if tempRoomId != nil {
+		roomId = tempRoomId[0]
+		valid = true
+	}
+
+	if tempGroupId != nil {
+		groupId = tempGroupId[0]
+		valid = true
+	}
+
+	if !valid {
+		return
+	}
 
 	tempt, err := template.New("html_capture.html").ParseFiles("html_capture.html")
 	if err != nil {
