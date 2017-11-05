@@ -1,0 +1,14 @@
+{
+  "name": "AdityaMili",
+  "description": "Aditya Mili Chart Renderer",
+  "repository": "https://github.com/AdityaMili95/renderchart",
+  "keywords": ["Chart", "render", "static"],
+  "buildpacks": [
+    {
+      "url": "https://github.com/kr/heroku-buildpack-go.git"
+    },
+    {
+      "url": "heroku/go"
+    }
+  ]
+}
