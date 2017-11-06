@@ -27,9 +27,7 @@
 <body>
 
 <p id="token">{{.ReqToken}}</p>
-<p id="user">{{.ReqUser}}</p>
-<p id="room">{{.ReqRoom}}</p>
-<p id="group">{{.ReqGroup}}</p>
+<p id="ID">{{.ID}}</p>
 
 <div id="image"></div>
 
@@ -257,6 +255,8 @@ $(document).ready(function(){
 	    messagingSenderId: "629996778487"
  	};
   	firebase.initializeApp(config);
+
+  	var ID=$("#ID").text();
      
 	function urltoFile(url, filename, mimeType){
 	    return (fetch(url)
@@ -271,10 +271,10 @@ $(document).ready(function(){
 		var image=Canvas2Image.convertToJPEG(preview); 
         document.body.appendChild(image);
 		
-		var storageRef = firebase.storage().ref().child("1/img"+"-preview");
+		var storageRef = firebase.storage().ref().child(ID+"/img"+"-preview");
         imgText=$("img").attr('src')
             
-            urltoFile(imgText, "hello"+"-preview"+".jpeg", 'image/jpeg')
+            urltoFile(imgText, "chart"+"-preview"+".jpeg", 'image/jpeg')
 				.then(function(file){
 	    			storageRef.put(file).then(function(snapshot) {
 	    				$("img").remove()
@@ -284,9 +284,7 @@ $(document).ready(function(){
 							type:"POST",
 							data:{
 								'token':$("#token").text(),
-								'user':$("#user").text(),
-								'group':$("#group").text(),
-								'room':$("#room").text(),
+								'ID':ID,
 								'imageURL': largeUrl,
 								'previewURL':snapshot.downloadURL
 							},
@@ -326,10 +324,10 @@ $(document).ready(function(){
 	            theCanvas = canvas;
 	            var image=Canvas2Image.convertToJPEG(canvas); 
 	            document.body.appendChild(image);
-	            var storageRef = firebase.storage().ref().child("1/img");
+	            var storageRef = firebase.storage().ref().child(+ID"/img");
 	            imgText=$("img").attr('src')
 	            
-	            urltoFile(imgText, 'hello.jpeg', 'image/jpeg')
+	            urltoFile(imgText, 'chart.jpeg', 'image/jpeg')
 					.then(function(file){
 		    			storageRef.put(file).then(function(snapshot) {
 		    					$("img").remove()
