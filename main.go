@@ -23,6 +23,7 @@ func testong(w http.ResponseWriter, r *http.Request) {
 
 	token := ""
 	ID := ""
+	MsgType := ""
 
 	tempToken := r.Form["token"]
 	tempUserId := r.Form["userId"]
@@ -35,10 +36,13 @@ func testong(w http.ResponseWriter, r *http.Request) {
 
 	if tempUserId != nil {
 		ID = tempUserId[0]
+		MsgType = "User"
 	} else if tempRoomId != nil {
 		ID = tempRoomId[0]
+		MsgType = "Room"
 	} else if tempGroupId != nil {
 		ID = tempGroupId[0]
+		MsgType = "Group"
 	} else {
 		return
 	}
@@ -52,5 +56,6 @@ func testong(w http.ResponseWriter, r *http.Request) {
 	tempt.Execute(w, map[string]interface{}{
 		"ReqToken": token,
 		"ID":       ID,
+		"MsgType":  MsgType,
 	})
 }

@@ -28,6 +28,7 @@
 
 <p id="token">{{.ReqToken}}</p>
 <p id="ID">{{.ID}}</p>
+<p id="msgType">{{.MsgType}}</p>
 
 <div id="image"></div>
 
@@ -285,6 +286,7 @@ $(document).ready(function(){
 							data:{
 								'token':$("#token").text(),
 								'ID':ID,
+								'msgType':$("#msgType").text(),
 								'imageURL': largeUrl,
 								'previewURL':snapshot.downloadURL
 							},
