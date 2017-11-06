@@ -324,7 +324,7 @@ $(document).ready(function(){
 	            theCanvas = canvas;
 	            var image=Canvas2Image.convertToJPEG(canvas); 
 	            document.body.appendChild(image);
-	            var storageRef = firebase.storage().ref().child(+ID"/img");
+	            var storageRef = firebase.storage().ref().child(ID+"/img");
 	            imgText=$("img").attr('src')
 	            
 	            urltoFile(imgText, 'chart.jpeg', 'image/jpeg')
