@@ -360,6 +360,7 @@ $(document).ready(function(){
 		var url = DOMURL.createObjectURL(svgBlob);
 
 		img.onload = function () {
+			$("body").append("<p id='success-mark'>MASUK KOK</p>")
 		    ctx.drawImage(img, 0, 0);
 		    DOMURL.revokeObjectURL(url);
 		    var imgURI = canvas
