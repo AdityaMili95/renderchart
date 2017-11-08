@@ -355,12 +355,14 @@ $(document).ready(function(){
   		var data = (new XMLSerializer()).serializeToString(svg);
 		var DOMURL = window.URL || window.webkitURL || window;
 
+		if(!DOMURL){
+			$("body").append("<p id='success-mark'>GA SUPPORT</p>")
+		}
 		var img = new Image();
 		var svgBlob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
 		var url = DOMURL.createObjectURL(svgBlob);
 
 		img.onload = function () {
-			$("body").append("<p id='success-mark'>MASUK KOK</p>")
 		    ctx.drawImage(img, 0, 0);
 		    DOMURL.revokeObjectURL(url);
 		    var imgURI = canvas
@@ -383,6 +385,7 @@ $(document).ready(function(){
 		};
 
 		img.src = url;
+
 
     }
 
