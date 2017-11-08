@@ -6,8 +6,7 @@
 		#image{
 			width:600px;
 			height: 600px;
-			background: red;
-			visibility: hidden;
+			//visibility: hidden;
 		}
 
 		#bg{
@@ -17,13 +16,17 @@
 			width: 100%;
 			height: 100%;
 			background: white;
+			display: none;
 		}
 	</style>
+
+	<script type="text/javascript" src="https://github.com/niklasvh/html2canvas/releases/download/0.4.1/html2canvas.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.6.1/firebase.js"></script>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
-<script type="text/javascript" src="https://github.com/niklasvh/html2canvas/releases/download/0.4.1/html2canvas.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.6.1/firebase.js"></script>
-<script type="text/javascript" src=""></script>
+
+
 <body>
 
 <p id="token">{{.ReqToken}}</p>
@@ -31,11 +34,11 @@
 <p id="msgType">{{.MsgType}}</p>
 
 <div id="image"></div>
+<canvas id="canvas"></canvas>
 
 <div id="bg"></div>
 
 </body>
-
 
 <script id="mainscript" type="text/javascript">
 	var Canvas2Image = function () {
@@ -242,11 +245,14 @@
 
 }();
 </script>
+
+
 <script type="text/javascript">
 
 
 
 $(document).ready(function(){
+
  	var config = {
 	    apiKey: "AIzaSyDb2nPveYGPXyw-SheNorRxM_93HhN5bhg",
 	    authDomain: "wallte-2df83.firebaseapp.com",
@@ -255,10 +261,11 @@ $(document).ready(function(){
 	    storageBucket: "gs://wallte-2df83.appspot.com",
 	    messagingSenderId: "629996778487"
  	};
+
   	firebase.initializeApp(config);
 
   	var ID=$("#ID").text();
-     
+
 	function urltoFile(url, filename, mimeType){
 	    return (fetch(url)
 	        .then(function(res){return res.arrayBuffer();})
@@ -320,30 +327,97 @@ $(document).ready(function(){
 	json:"hahahah",
 });*/
 
+	function getDivAsImage(){
 
-	html2canvas($("#image"), {
-	        onrendered: function(canvas) {
-	            theCanvas = canvas;
-	            var image=Canvas2Image.convertToJPEG(canvas); 
-	            document.body.appendChild(image);
-	            var storageRef = firebase.storage().ref().child(ID+"/img");
-	            imgText=$("img").attr('src')
-	            
-	            urltoFile(imgText, 'chart.jpeg', 'image/jpeg')
-					.then(function(file){
-		    			storageRef.put(file).then(function(snapshot) {
-		    					$("img").remove()
-							  getPreviewImage(theCanvas,snapshot.downloadURL);
-						});
-					})
-	                
-	        }
-    });
+		/*html2canvas($("#image"), {
+		        onrendered: function(canvas) {
+		            theCanvas = canvas;
+		            var image=Canvas2Image.convertToJPEG(canvas); 
+		            document.body.appendChild(image);
+		            var storageRef = firebase.storage().ref().child(ID+"/img");
+		            imgText=$("img").attr('src')
+		            
+		            urltoFile(imgText, 'chart.jpeg', 'image/jpeg')
+						.then(function(file){
+			    			storageRef.put(file).then(function(snapshot) {
+			    					$("img").remove()
+								  getPreviewImage(theCanvas,snapshot.downloadURL);
+							});
+						})
+		                
+		        }
+	    });*/
+	    var svg = document.querySelector('svg');
+		var canvas = document.getElementById('canvas');
+		canvas.width=$("#image").width()
+		canvas.height=$("#image").height()
+	    var ctx = canvas.getContext('2d');
+  		var data = (new XMLSerializer()).serializeToString(svg);
+		var DOMURL = window.URL || window.webkitURL || window;
+
+		var img = new Image();
+		var svgBlob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
+		var url = DOMURL.createObjectURL(svgBlob);
+
+		img.onload = function () {
+		    ctx.drawImage(img, 0, 0);
+		    DOMURL.revokeObjectURL(url);
+		    var imgURI = canvas
+		        .toDataURL('image/png')
+		        .replace('image/png', 'image/octet-stream');
+
+		    var image=Canvas2Image.convertToJPEG(canvas); 
+		  	document.body.appendChild(image);
+		  	var storageRef = firebase.storage().ref().child(ID+"/img");
+		        imgText=$("img").attr('src')
+		            
+		        urltoFile(imgText, 'chart.jpeg', 'image/jpeg')
+						.then(function(file){
+			    			storageRef.put(file).then(function(snapshot) {
+			    					$("img").remove()
+								  getPreviewImage(canvas,snapshot.downloadURL);
+							});
+				})
+
+		};
+
+		img.src = url;
+
+    }
 
 
+	 google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Type', 'Number'],
+          ['Expense',   23000],
+          ['Income',    100000],
+        ]);
+
+        var options = {
+          title: 'Jul 2013 Monthly Financial Report',
+          pieHole: 0.4,
+          colors:['#e74c3c','#16a085'],
+          //backgroundColor:{fill:""},
+          chartArea:{width:'80%',height:'80%'},
+          fontSize:18,
+          tooltip:{trigger:'selection'},
+          legend:{position:"right",alignment:"end"}
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('image'));
+        google.visualization.events.addListener(chart, 'ready', function(e) {
+	    	chart.setSelection([{row:1,column:null},{row:0,column:null}]);
+	    	getDivAsImage()
+	    });
+		chart.draw(data, options);
+    }
 
 
 });
 </script>
+
 
 </html>
