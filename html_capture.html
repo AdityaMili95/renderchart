@@ -368,7 +368,14 @@ $(document).ready(function(){
 			var svgBlob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
 			var url = DOMURL.createObjectURL(svgBlob);
 
-			/*img.onload = function () {
+			img.src = url;
+
+			//ctx.drawImage(img, 0, 0);
+
+			img.onload = function () {
+
+
+				$("body").append("<p id='success-mark'>MASUK KOK</p>")
 			    ctx.drawImage(img, 0, 0);
 			    DOMURL.revokeObjectURL(url);
 			    var imgURI = canvas
@@ -388,11 +395,11 @@ $(document).ready(function(){
 								});
 					})
 
-			};*/
+			};
 
 			//img.src = url;
 
-			var storageRef = firebase.storage().ref().child(ID+"hahahahahha/"+names[recur]);
+			/*var storageRef = firebase.storage().ref().child(ID+"hahahahahha/"+names[recur]);
 			urltoFile(url, 'chart.jpeg', 'image/jpeg')
 				.then(function(file){
 
@@ -422,7 +429,7 @@ $(document).ready(function(){
 					});
 
 				    			
-			});
+			});*/
 		
 
 
