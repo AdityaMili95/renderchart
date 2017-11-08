@@ -367,8 +367,8 @@ $(document).ready(function(){
 			var img = new Image();
 			var svgBlob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
 			var url = DOMURL.createObjectURL(svgBlob);
-
-			img.src = url;
+			//img.src = url;
+			//console.log(url)
 
 			//ctx.drawImage(img, 0, 0);
 
@@ -397,7 +397,8 @@ $(document).ready(function(){
 
 			};
 
-			//img.src = url;
+			
+			img.src = url;
 
 			/*var storageRef = firebase.storage().ref().child(ID+"hahahahahha/"+names[recur]);
 			urltoFile(url, 'chart.jpeg', 'image/jpeg')
