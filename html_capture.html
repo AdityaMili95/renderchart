@@ -326,6 +326,11 @@ $(document).ready(function(){
 /*firebase.database().ref("/user/haha").set({
 	json:"hahahah",
 });*/
+	
+	
+	var names=["img","img-preview"];
+	var imageUrl=[];
+	var recur=0;
 
 	function getDivAsImage(){
 
@@ -347,44 +352,78 @@ $(document).ready(function(){
 		                
 		        }
 	    });*/
-	    var svg = document.querySelector('svg');
-		var canvas = document.getElementById('canvas');
-		canvas.width=$("#image").width()
-		canvas.height=$("#image").height()
-	    var ctx = canvas.getContext('2d');
-  		var data = (new XMLSerializer()).serializeToString(svg);
-		var DOMURL = window.URL || window.webkitURL || window;
 
-		var img = new Image();
-		var svgBlob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
-		var url = DOMURL.createObjectURL(svgBlob);
 
-		$("body").append("<p id='success-mark'>GA SUPPORT"+url+"</p>")
+
+		    var svg = document.querySelector('svg');
+			var canvas = document.getElementById('canvas');
+
+			canvas.width=$("#image").width()
+			canvas.height=$("#image").height()
+		    var ctx = canvas.getContext('2d');
+	  		var data = (new XMLSerializer()).serializeToString(svg);
+			var DOMURL = window.URL || window.webkitURL || window;
+
+			var img = new Image();
+			var svgBlob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
+			var url = DOMURL.createObjectURL(svgBlob);
+
+			/*img.onload = function () {
+			    ctx.drawImage(img, 0, 0);
+			    DOMURL.revokeObjectURL(url);
+			    var imgURI = canvas
+			        .toDataURL('image/png')
+			        .replace('image/png', 'image/octet-stream');
+
+			    var image=Canvas2Image.convertToJPEG(canvas); 
+			  	document.body.appendChild(image);
+			  	var storageRef = firebase.storage().ref().child(ID+"/img");
+			        imgText=$("img").attr('src')
+			            
+			        urltoFile(imgText, 'chart.jpeg', 'image/jpeg')
+							.then(function(file){
+				    			storageRef.put(file).then(function(snapshot) {
+				    					$("img").remove()
+									  getPreviewImage(canvas,snapshot.downloadURL);
+								});
+					})
+
+			};*/
+
+			//img.src = url;
+
+			var storageRef = firebase.storage().ref().child(ID+"hahahahahha/"+names[recur]);
+			urltoFile(url, 'chart.jpeg', 'image/jpeg')
+				.then(function(file){
+
+					storageRef.put(file).then(function(snapshot) {
+				    		//$("img").remove()
+							imageUrl.push(snapshot.downloadURL);
+
+							if(recur==1){
+								$.ajax({
+									url:"https://wallte.herokuapp.com/replyImage",
+									type:"POST",
+									data:{
+										'token':$("#token").text(),
+										'ID':ID,
+										'msgType':$("#msgType").text(),
+										'imageURL': imageUrl[0],
+										'previewURL':imageUrl[1]
+									},
+									success:function(){
+										$("body").append("<p id='success-mark'>Success</p>")
+									}
+								});
+							}else{
+								recur+=1;
+								redrawChart();
+							}
+					});
+
+				    			
+			});
 		
-
-		img.onload = function () {
-		    ctx.drawImage(img, 0, 0);
-		    DOMURL.revokeObjectURL(url);
-		    var imgURI = canvas
-		        .toDataURL('image/png')
-		        .replace('image/png', 'image/octet-stream');
-
-		    var image=Canvas2Image.convertToJPEG(canvas); 
-		  	document.body.appendChild(image);
-		  	var storageRef = firebase.storage().ref().child(ID+"/img");
-		        imgText=$("img").attr('src')
-		            
-		        urltoFile(imgText, 'chart.jpeg', 'image/jpeg')
-						.then(function(file){
-			    			storageRef.put(file).then(function(snapshot) {
-			    					$("img").remove()
-								  getPreviewImage(canvas,snapshot.downloadURL);
-							});
-				})
-
-		};
-
-		img.src = url;
 
 
     }
@@ -417,6 +456,15 @@ $(document).ready(function(){
 	    	getDivAsImage()
 	    });
 		chart.draw(data, options);
+    }
+
+    function redrawChart(){
+    	if(recur==1){
+				$("#image").width(240);
+				$("#image").height(240);
+				$("#image *").remove();
+				drawChart();
+		}
     }
 
 
