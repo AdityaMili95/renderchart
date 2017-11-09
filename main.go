@@ -29,6 +29,14 @@ func testong(w http.ResponseWriter, r *http.Request) {
 	tempUserId := r.Form["userId"]
 	tempRoomId := r.Form["roomId"]
 	tempGroupId := r.Form["groupId"]
+	day := r.Form["day"]
+	month := r.Form["month"]
+	year := r.Form["year"]
+	period := r.Form["period"]
+
+	if period == nil || day == nil || month == nil || year == nil {
+		return
+	}
 
 	if tempToken != nil {
 		token = tempToken[0]
@@ -57,5 +65,9 @@ func testong(w http.ResponseWriter, r *http.Request) {
 		"ReqToken": token,
 		"ID":       ID,
 		"MsgType":  MsgType,
+		"Day":      day,
+		"Month":    month,
+		"Year":     year,
+		"Period":   period,
 	})
 }
