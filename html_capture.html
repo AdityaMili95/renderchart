@@ -29,7 +29,6 @@
 
 <body>
 
-<p id="token">{{.ReqToken}}</p>
 <p id="ID">{{.ID}}</p>
 <p id="msgType">{{.MsgType}}</p>
 <p id="day">{{.Day}}</p>
@@ -295,7 +294,6 @@ $(document).ready(function(){
 							url:"https://wallte.herokuapp.com/replyImage",
 							type:"POST",
 							data:{
-								'token':$("#token").text(),
 								'ID':ID,
 								'msgType':$("#msgType").text(),
 								'imageURL': largeUrl,
