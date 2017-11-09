@@ -3,6 +3,15 @@
 <head>
 	<title></title>
 	<style type="text/css">
+
+		/*@font-face{
+			src:url('/resources/GROBOLD.ttf');
+			font-family: grobold;
+		}
+
+		body{
+			font-family: grobold;
+		}*/
 		#image{
 			width:600px;
 			height: 600px;
@@ -379,12 +388,15 @@ $(document).ready(function(){
         var options = {
           title: 'Jul 2013 Monthly Financial Report',
           pieHole: 0.4,
-          colors:['#e74c3c','#16a085'],
-          //backgroundColor:{fill:""},
+          colors:['#FFF','#2c3e50'],
+          backgroundColor:{fill:"#7A4838"},
           chartArea:{width:'80%',height:'80%'},
-          fontSize:18,
-          tooltip:{trigger:'selection'},
-          legend:{position:"right",alignment:"end"}
+          fontSize:22,
+          fontName:'ComicSans',
+          pieSliceTextStyle:{color:'#00ABFF'},
+          tooltip:{trigger:'selection',textStyle:{color:"#FFF"}},
+          titleTextStyle:{color:"#FFF"},
+          legend:{position:"right",alignment:"end",textStyle:{color:"#FFF"}}
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('image'));
