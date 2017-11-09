@@ -21,7 +21,6 @@ func testong(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token := ""
 	ID := ""
 	MsgType := ""
 	day := ""
