@@ -283,8 +283,8 @@ $(document).ready(function(){
  	};
 
   	var ID=$("#ID").text();
-  	var expense=0;
-    var income=0;
+  	var expense=1000;
+    var income=1000;
 
 	function urltoFile(url, filename, mimeType){
 	    return (fetch(url)
@@ -502,7 +502,7 @@ $(document).ready(function(){
         ]);
 
         var percentColor='#00ABFF';
-        var titleTextColor="#644033";
+        var titleTextColor="#FFF";
 
         if(expense==0||income==0){
         	percentColor='#FFF';
@@ -523,7 +523,7 @@ $(document).ready(function(){
           pieSliceTextStyle:{color:percentColor},
           tooltip:{trigger:'selection',textStyle:{color:"#644033",fontSize:19}},
           titleTextStyle:{color:titleTextColor,fontSize:23},
-          legend:{position:"right",alignment:"end",textStyle:{color:"#644033"}}
+          legend:{position:"right",alignment:"end",textStyle:{color:"#FFF"}}
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('image'));
