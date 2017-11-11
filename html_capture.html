@@ -16,7 +16,6 @@
 			width:600px;
 			height: 600px;
 			color: white;
-
 			//visibility: hidden;
 		}
 
@@ -40,12 +39,6 @@
 
 <body>
 
-<div id="image"></div>
-<canvas id="canvas"></canvas>
-<div id="bg"></div>
-<!--<div id="additional-data">
-	<p>HAHAHAHAH</p>
-</div>-->
 
 <p id="ID">{{.ID}}</p>
 <p id="msgType">{{.MsgType}}</p>
@@ -53,6 +46,14 @@
 <p id="month">{{.Month}}</p>
 <p id="year">{{.Year}}</p>
 <p id="period">{{.Period}}</p>
+
+
+<div id="image"></div>
+<canvas id="canvas"></canvas>
+<div id="bg"></div>
+<!--<div id="additional-data">
+	<p>HAHAHAHAH</p>
+</div>-->
 
 </body>
 
@@ -366,7 +367,7 @@ $(document).ready(function(){
 				return;
 			}
 			var size=$(this)[0].getBBox();
-			ctx.fillStyle="#ff0";
+			ctx.fillStyle="#fff";
 			ctx.fillRect(size.x,size.y,size.width,size.height);
 			ctx.fill();
 		});
