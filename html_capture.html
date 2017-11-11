@@ -501,10 +501,12 @@ $(document).ready(function(){
           ['Income',    income],
         ]);
 
-        var percentColor='#00ABFF'
+        var percentColor='#00ABFF';
+        var titleTextColor="#644033";
 
         if(expense==0||income==0){
         	percentColor='#FFF';
+        	titleTextColor='#FFF';
         }
 
         var options = {
@@ -517,7 +519,7 @@ $(document).ready(function(){
           fontName:'grobold',
           pieSliceTextStyle:{color:percentColor},
           tooltip:{trigger:'selection',textStyle:{color:"#644033",fontSize:19}},
-          titleTextStyle:{color:"#644033",fontSize:23},
+          titleTextStyle:{color:titleTextColor,fontSize:23},
           legend:{position:"right",alignment:"end",textStyle:{color:"#644033"}}
         };
 
