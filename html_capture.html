@@ -404,7 +404,7 @@ $(document).ready(function(){
 
 						    var image=Canvas2Image.convertToJPEG(canvas); 
 						  	document.body.appendChild(image);
-						  	
+
 						  	firebase.initializeApp(config);
 						  	var storageRef = firebase.storage().ref().child(ID+"/img");
 						        imgText=$("img").attr('src')
@@ -517,7 +517,7 @@ $(document).ready(function(){
           fontName:'grobold',
           pieSliceTextStyle:{color:percentColor},
           tooltip:{trigger:'selection',textStyle:{color:"#644033",fontSize:19}},
-          titleTextStyle:{color:"#644033"},
+          titleTextStyle:{color:"#644033",fontSize:27},
           legend:{position:"right",alignment:"end",textStyle:{color:"#644033"}}
         };
 
