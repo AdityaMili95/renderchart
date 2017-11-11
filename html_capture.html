@@ -4,17 +4,19 @@
 	<title></title>
 	<style type="text/css">
 
-		/*@font-face{
+		@font-face{
 			src:url('/resources/GROBOLD.ttf');
 			font-family: grobold;
 		}
 
 		body{
 			font-family: grobold;
-		}*/
-		#image{
+		}
+		#image,#additional-data{
 			width:600px;
 			height: 600px;
+			color: white;
+
 			//visibility: hidden;
 		}
 
@@ -38,17 +40,19 @@
 
 <body>
 
+<div id="image"></div>
+<canvas id="canvas"></canvas>
+<div id="bg"></div>
+<!--<div id="additional-data">
+	<p>HAHAHAHAH</p>
+</div>-->
+
 <p id="ID">{{.ID}}</p>
 <p id="msgType">{{.MsgType}}</p>
 <p id="day">{{.Day}}</p>
 <p id="month">{{.Month}}</p>
 <p id="year">{{.Year}}</p>
 <p id="period">{{.Period}}</p>
-
-<div id="image"></div>
-<canvas id="canvas"></canvas>
-
-<div id="bg"></div>
 
 </body>
 
@@ -337,66 +341,155 @@ $(document).ready(function(){
 /*firebase.database().ref("/user/haha").set({
 	json:"hahahah",
 });*/
+	
+	var allTextPopulated=[];
+	var textWithPercent=[];
+
+	function replicateText(ctx,coll){
+		//var elem=$(selector);
+
+		for(var i=0;i<coll.length;i++){
+			var data=coll[i];
+		//ctx.clearRect(pos.x,pos.y,elem.getBBox().width,elem.getBBox().height);
+			ctx.font=data.size+"px grobold";
+			ctx.fillStyle=data.fill;
+			ctx.fillText(data.text,data.x,data.y);
+		}
+	}
+
+
+	function replicateBox(ctx){
+
+		$("path").each(function(){
+
+			if($(this).attr('filter')==undefined){
+				return;
+			}
+			var size=$(this)[0].getBBox();
+			ctx.fillStyle="#ff0";
+			ctx.fillRect(size.x,size.y,size.width,size.height);
+			ctx.fill();
+		});
+
+	}
+
+	function getSVGTextData(elem,coll){
+		var data={x:elem.attr('x'),y:elem.attr('y'),'text':elem.text(),"size":elem.attr('font-size'),"fill":elem.attr('fill')};
+		coll.push(data);
+		elem.remove();
+	}
+
+	function populateTextSVG(){
+		
+		$("g text").each(function(){
+			if($(this).text().indexOf("%")>=0&&$(this).text().indexOf("(")<0){
+				getSVGTextData($(this),textWithPercent);	
+				return;
+			}
+			getSVGTextData($(this),allTextPopulated);	
+		});
+		//getSVGTextData("g[column-id='Income'] text");
+	}
 
 	function getDivAsImage(){
-		    var svg = document.querySelector('svg');
-			var canvas = document.getElementById('canvas');
 
-			canvas.width=$("#image").width()
-			canvas.height=$("#image").height()
-		    var ctx = canvas.getContext('2d');
-	  		var data = (new XMLSerializer()).serializeToString(svg);
-			var img = new Image();
+			var imgGimmick=new Image();
+			//imgGimmick.setAttribute('crossOrigin', 'anonymous');
 
-			img.addEventListener('load', function () {
+			imgGimmick.addEventListener('load',function(){
 
-			    ctx.drawImage(img, 0, 0);
-			    var imgURI = canvas
-			        .toDataURL('image/png')
-			        .replace('image/png', 'image/octet-stream');
 
-			    var image=Canvas2Image.convertToJPEG(canvas); 
-			  	document.body.appendChild(image);
-			  	var storageRef = firebase.storage().ref().child(ID+"/img");
-			        imgText=$("img").attr('src')
-			            
-			        urltoFile(imgText, 'chart.jpeg', 'image/jpeg')
-							.then(function(file){
-				    			storageRef.put(file).then(function(snapshot) {
-				    					$("img").remove()
-									  getPreviewImage(canvas,snapshot.downloadURL);
-								});
-					})
+						populateTextSVG();
 
+
+					    var svg = document.querySelector('svg');
+						var canvas = document.getElementById('canvas');
+
+						canvas.width=$("#image").width()
+						canvas.height=$("#image").height()
+					    var ctx = canvas.getContext('2d');
+				  		var data = (new XMLSerializer()).serializeToString(svg);
+						var img = new Image();
+
+						img.addEventListener('load', function () {
+
+
+							emojiWidth=imgGimmick.width*4/5;
+						    emojiHeight=imgGimmick.height*4/5;
+
+						    ctx.drawImage(img, 0, 0);
+						    ctx.drawImage(imgGimmick, canvas.width-emojiWidth-20, canvas.height/2-emojiHeight/2,emojiWidth,emojiHeight);
+						    //ctx.font = "22px grobold";
+						    //ctx.fillStyle="#644033";
+							//ctx.fillText("Jul 2013 Monthly Financial Report",20,50);
+							replicateText(ctx,textWithPercent);
+							replicateBox(ctx);
+							replicateText(ctx,allTextPopulated);
+
+
+						    var imgURI = canvas
+						        .toDataURL('image/png')
+						        .replace('image/png', 'image/octet-stream');
+
+						    var image=Canvas2Image.convertToJPEG(canvas); 
+						  	document.body.appendChild(image);
+						  	var storageRef = firebase.storage().ref().child(ID+"/img");
+						        imgText=$("img").attr('src')
+						            
+						        urltoFile(imgText, 'chart.jpeg', 'image/jpeg')
+										.then(function(file){
+							    			storageRef.put(file).then(function(snapshot) {
+							    				  $("img").remove()
+												  getPreviewImage(canvas,snapshot.downloadURL);
+											});
+								})
+
+						});
+
+
+						img.src = 'data:image/svg+xml;utf8,' + data;
 			});
 
-
-			img.src = 'data:image/svg+xml;utf8,' + data;
+			imgGimmick.src="/resources/test.png";
     }
+
+
+
+
 
 
 	google.charts.load("current", {packages:["corechart"]});
     google.charts.setOnLoadCallback(drawChart);
 
     function drawChart() {
+
+    	var expense=100000;
+    	var income=1000000;
+
         var data = google.visualization.arrayToDataTable([
           ['Type', 'Number'],
-          ['Expense',   23000],
-          ['Income',    100000],
+          ['Expense',   expense],
+          ['Income',    income],
         ]);
+
+        var percentColor='#00ABFF'
+
+        if(expense==0||income==0){
+        	percentColor='#FFF';
+        }
 
         var options = {
           title: 'Jul 2013 Monthly Financial Report',
           pieHole: 0.4,
-          colors:['#FFF','#2c3e50'],
-          backgroundColor:{fill:"#7A4838"},
+          colors:['#644033','#2c3e50'],
+          backgroundColor:{fill:"#76ED1B"},
           chartArea:{width:'80%',height:'80%'},
           fontSize:22,
-          fontName:'ComicSans',
-          pieSliceTextStyle:{color:'#00ABFF'},
-          tooltip:{trigger:'selection',textStyle:{color:"#FFF"}},
-          titleTextStyle:{color:"#FFF"},
-          legend:{position:"right",alignment:"end",textStyle:{color:"#FFF"}}
+          fontName:'grobold',
+          pieSliceTextStyle:{color:percentColor},
+          tooltip:{trigger:'selection',textStyle:{color:"#644033",fontSize:19}},
+          titleTextStyle:{color:"#644033"},
+          legend:{position:"right",alignment:"end",textStyle:{color:"#644033"}}
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('image'));
@@ -406,6 +499,22 @@ $(document).ready(function(){
 	    });
 		chart.draw(data, options);
     }
+
+   /* html2canvas($("#additional-data"), {
+        onrendered: function(canvas) {
+            theCanvas = canvas;
+            var image=Canvas2Image.convertToPNG(canvas); 
+            document.body.appendChild(image);
+            var storageRef = firebase.storage().ref().child("1/img");
+            imgText=$("img").attr('src')
+            
+            urltoFile(imgText, 'hello.png', 'image/png')
+				.then(function(file){
+	    			
+				})
+                
+        }
+    });*/
 
 });
 </script>
