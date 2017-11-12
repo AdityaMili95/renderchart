@@ -397,7 +397,7 @@ $(document).ready(function(){
 	function getSVGTextData(elem,coll){
 		var data={x:elem.attr('x'),y:elem.attr('y'),'text':elem.text(),"size":elem.attr('font-size'),"fill":elem.attr('fill')};
 		coll.push(data);
-		elem.remove();
+		//elem.remove();
 	}
 
 	function populateTextSVG(){
@@ -412,6 +412,22 @@ $(document).ready(function(){
 		//getSVGTextData("g[column-id='Income'] text");
 	}
 
+	function populateTextInDialog(){
+		$("g text").each(function(){
+
+			if($(this).text().indexOf("%")>=0&&$(this).text().indexOf("(")>=0){
+				if($(this).parent().parent().find('text').length==0){
+					return;
+				}
+
+
+				for(var i=0;i<$(this).parent().parent().find('text').length;i++){
+					getSVGTextData($($(this).parent().parent().find('text')[i]),allTextPopulated);
+				}
+
+			}
+		});
+	}
 
 	function canvToImage(canvas){
 
@@ -436,7 +452,7 @@ $(document).ready(function(){
 
 	}
 
-	function getDivAsImage(){
+	function getDivAsImage(chart){
 
 			var imgGimmick=new Image();
 			var subImage=new Image();
@@ -482,7 +498,8 @@ $(document).ready(function(){
 					imgGimmick.addEventListener('load',function(){
 
 
-								populateTextSVG();
+								//populateTextSVG();
+								populateTextInDialog();
 
 							    var svg = document.querySelector('svg');
 								var canvas = document.getElementById('canvas');
@@ -527,8 +544,8 @@ $(document).ready(function(){
 								    //ctx.font = "22px grobold";
 								    //ctx.fillStyle="#644033";
 									//ctx.fillText("Jul 2013 Monthly Financial Report",20,50);
-									replicateText(ctx,textWithPercent);
-									replicateBox(ctx);
+									//replicateText(ctx,textWithPercent);
+									//replicateBox(ctx);
 									replicateText(ctx,allTextPopulated);
 
 									canvToImage(canvas);
@@ -537,7 +554,7 @@ $(document).ready(function(){
 								});
 
 
-								img.src = 'data:image/svg+xml;utf8,' + data;
+								img.src = chart;
 					});
 
 					imgGimmick.src=picture[imgIdx].main;
@@ -595,7 +612,7 @@ $(document).ready(function(){
         var chart = new google.visualization.PieChart(document.getElementById('image'));
         google.visualization.events.addListener(chart, 'ready', function(e) {
 	    	chart.setSelection([{row:1,column:null},{row:0,column:null}]);
-	    	//getDivAsImage();
+	    	getDivAsImage(chart.getImageURI());
 	    });
 		chart.draw(data, options);
     }
