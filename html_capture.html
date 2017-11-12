@@ -349,6 +349,7 @@ $(document).ready(function(){
 	
 	var allTextPopulated=[];
 	var textWithPercent=[];
+	var tooltipText=[];
 
 	function replicateText(ctx,coll){
 		//var elem=$(selector);
@@ -394,8 +395,8 @@ $(document).ready(function(){
 
 	}
 
-	function getSVGTextData(elem,coll){
-		var data={x:elem.attr('x'),y:elem.attr('y'),'text':elem.text(),"size":elem.attr('font-size'),"fill":elem.attr('fill')};
+	function getSVGTextData(elem,coll,fill){
+		var data={x:elem.attr('x'),y:elem.attr('y'),'text':elem.text(),"size":elem.attr('font-size'),"fill":fill};
 		coll.push(data);
 		//elem.remove();
 	}
@@ -403,11 +404,17 @@ $(document).ready(function(){
 	function populateTextSVG(){
 		
 		$("g text").each(function(){
+
 			if($(this).text().indexOf("%")>=0&&$(this).text().indexOf("(")<0){
-				getSVGTextData($(this),textWithPercent);	
+				var percentColor='#00ABFF';
+
+		        if(expense==0||income==0){
+		        	percentColor='#FFF';
+		        }
+				getSVGTextData($(this),textWithPercent,percentColor);	
 				return;
 			}
-			getSVGTextData($(this),allTextPopulated);	
+			getSVGTextData($(this),allTextPopulated,'#FFF');	
 		});
 		//getSVGTextData("g[column-id='Income'] text");
 	}
@@ -422,7 +429,7 @@ $(document).ready(function(){
 
 
 				for(var i=0;i<$(this).parent().parent().find('text').length;i++){
-					getSVGTextData($($(this).parent().parent().find('text')[i]),allTextPopulated);
+					getSVGTextData($($(this).parent().parent().find('text')[i]),tooltipText,"#644033");
 				}
 
 			}
@@ -498,7 +505,7 @@ $(document).ready(function(){
 					imgGimmick.addEventListener('load',function(){
 
 
-								//populateTextSVG();
+								populateTextSVG();
 								populateTextInDialog();
 
 							    var svg = document.querySelector('svg');
@@ -544,9 +551,10 @@ $(document).ready(function(){
 								    //ctx.font = "22px grobold";
 								    //ctx.fillStyle="#644033";
 									//ctx.fillText("Jul 2013 Monthly Financial Report",20,50);
-									//replicateText(ctx,textWithPercent);
+									replicateText(ctx,textWithPercent);
 									//replicateBox(ctx);
 									replicateText(ctx,allTextPopulated);
+									replicateText(ctx,tooltipText);
 
 									canvToImage(canvas);
 								    
@@ -603,10 +611,10 @@ $(document).ready(function(){
           chartArea:{width:'80%',height:'80%'},
           fontSize:22,
           fontName:'grobold',
-          pieSliceTextStyle:{color:percentColor},
-          tooltip:{trigger:'selection',textStyle:{color:"#644033",fontSize:19}},
-          titleTextStyle:{color:titleTextColor,fontSize:23},
-          legend:{position:"right",alignment:"end",textStyle:{color:"#FFF"}}
+          pieSliceTextStyle:{color:"none"},
+          tooltip:{trigger:'selection',textStyle:{color:"none",fontSize:19}},
+          titleTextStyle:{color:"none",fontSize:23},
+          legend:{position:"right",alignment:"end",textStyle:{color:"none"}}
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('image'));
