@@ -595,7 +595,7 @@ $(document).ready(function(){
         var chart = new google.visualization.PieChart(document.getElementById('image'));
         google.visualization.events.addListener(chart, 'ready', function(e) {
 	    	chart.setSelection([{row:1,column:null},{row:0,column:null}]);
-	    	getDivAsImage();
+	    	//getDivAsImage();
 	    });
 		chart.draw(data, options);
     }
