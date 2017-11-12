@@ -283,7 +283,7 @@ $(document).ready(function(){
  	};
 
   	var ID=$("#ID").text();
-  	var expense=1000;
+  	var expense=100;
     var income=1000;
 
 	function urltoFile(url, filename, mimeType){
@@ -362,18 +362,34 @@ $(document).ready(function(){
 	}
 
 
+	function drawStar(canvas,ctx){
+		
+		var radius=0.7;
+		for(var i=0;i<150;i++){
+			var x=Math.random()*(canvas.width-radius)+radius/2;
+			var y=Math.random()*(canvas.height-radius)+radius/2;
+			ctx.fillStyle="#ff0";
+			ctx.beginPath();
+			ctx.arc(x,y,radius,0,2*Math.PI,true);
+			ctx.fill();
+		}
+	}
+
 	function replicateBox(ctx){
 
+		ctx.save();
 		$("path").each(function(){
 
 			if($(this).attr('filter')==undefined){
 				return;
 			}
 			var size=$(this)[0].getBBox();
-			ctx.fillStyle="#fff";
+			ctx.fillStyle="#FF0";
+			ctx.globalAlpha = 0.7;
 			ctx.fillRect(size.x,size.y,size.width,size.height);
 			ctx.fill();
 		});
+		ctx.restore();
 
 	}
 
@@ -422,7 +438,48 @@ $(document).ready(function(){
 	function getDivAsImage(){
 
 			var imgGimmick=new Image();
+			var subImage=new Image();
 			//imgGimmick.setAttribute('crossOrigin', 'anonymous');
+
+			
+			var picture=[
+				{
+					'main':"/resources/happy.png",
+					"sub":"/resources/happy_sub.png"
+				},
+				{
+					'main':"/resources/soso.png",
+					"sub":"/resources/soso_sub.png"
+				},
+				{
+					'main':"/resources/bad.png",
+					"sub":"/resources/bad_sub.png"
+				},
+				{
+					'main':"/resources/awful.png",
+					"sub":"/resources/awful_sub.png"
+				},
+				{
+					'main':"/resources/notfound.png",
+					"sub":"/resources/notfound.png"
+				}
+			];
+			var percentIncome=income/(income+expense)*100;
+			var imgIdx=0;
+
+			if(income==0&&expense==0){
+				imgIdx=4;
+			}else if(percentIncome<35){
+				imgIdx=3;
+			}else if(percentIncome<50){
+				imgIdx=2;
+			}else if(percentIncome<65){
+				imgIdx=1;
+			}
+
+
+			subImage.src=picture[imgIdx].sub;
+
 
 			imgGimmick.addEventListener('load',function(){
 
@@ -440,16 +497,18 @@ $(document).ready(function(){
 
 						img.addEventListener('load', function () {
 
-
-							emojiWidth=imgGimmick.width*4/5;
-						    emojiHeight=imgGimmick.height*4/5;
+							var emojiWidth=imgGimmick.width*4/5;
+						    var emojiHeight=imgGimmick.height*4/5;
+						    var subEmojiWidth=subImage.width*2/3;
+						    var subEmojiHeight=subImage.height*2/3;
 
 						    ctx.drawImage(img, 0, 0);
-						    
+							drawStar(canvas,ctx);						    
 
 						    if(income==0&&expense==0){
 						    	ctx.font="35px grobold";
 								ctx.fillStyle="#fff";
+								ctx.beginPath();
 						    	ctx.fillText("NO DATA",canvas.width/2-130,canvas.height/2);
 						    	ctx.fillText("FOUND",canvas.width/2-130,canvas.height/2+45);
 
@@ -463,7 +522,8 @@ $(document).ready(function(){
 
 						    	ctx.drawImage(imgGimmick, canvas.width-emojiWidth-20, canvas.height-emojiHeight,emojiWidth,emojiHeight);
 						    }else{
-						    	ctx.drawImage(imgGimmick, canvas.width-emojiWidth-20, canvas.height/2-emojiHeight/2,emojiWidth,emojiHeight);
+						    	ctx.drawImage(imgGimmick, canvas.width-emojiWidth-20, canvas.height/2-emojiHeight/2-125,emojiWidth,emojiHeight);
+						    	ctx.drawImage(subImage, 20, canvas.height-subEmojiHeight+10,subEmojiWidth,subEmojiHeight);
 						    }
 
 						    //ctx.font = "22px grobold";
@@ -482,7 +542,7 @@ $(document).ready(function(){
 						img.src = 'data:image/svg+xml;utf8,' + data;
 			});
 
-			imgGimmick.src="/resources/test.png";
+			imgGimmick.src=picture[imgIdx].main;
     }
 
 
@@ -516,7 +576,7 @@ $(document).ready(function(){
           title: 'Jul 2013 Monthly Financial Report',
           pieHole: 0.4,
           colors:['#644033','#2c3e50'],
-          backgroundColor:{fill:"#76ED1B"},
+          backgroundColor:{fill:"#321F3F"},
           chartArea:{width:'80%',height:'80%'},
           fontSize:22,
           fontName:'grobold',
