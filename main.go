@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	//"os"
+	"os"
 )
 
 func main() {
 	http.HandleFunc("/render_chart", testong)
-	//port := os.Getenv("PORT")
-	//addr := fmt.Sprintf(":%s", port)
+	port := os.Getenv("PORT")
+	addr := fmt.Sprintf(":%s", port)
 	http.Handle("/resources/", http.StripPrefix("/resources/", http.FileServer(http.Dir("resources"))))
-	http.ListenAndServe(":8007", nil)
+	http.ListenAndServe(addr, nil)
 }
 
 func testong(w http.ResponseWriter, r *http.Request) {
