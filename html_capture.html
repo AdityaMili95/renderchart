@@ -563,14 +563,13 @@ function replicateText(ctx,coll){
 								    //ctx.font = "22px grobold";
 								    //ctx.fillStyle="#644033";
 									//ctx.fillText("Jul 2013 Monthly Financial Report",20,50);
-									replicateText(ctx,textWithPercent);
-									replicateText(ctx,allTextPopulated);
-									replicateText(ctx,tooltipText);
+						replicateText(ctx,textWithPercent);
+						replicateText(ctx,allTextPopulated);
+						replicateText(ctx,tooltipText);
+						canvToImage(canvas);
 
-									canvToImage(canvas);
 
-
-								});
+					});
 
 
 					img.src = chart;
@@ -616,6 +615,7 @@ function replicateText(ctx,coll){
 						ctx.fillStyle="#FFF";
 						ctx.fillText("Jul 2013 Monthly Financial Report",130,80);
 						drawStar(canvas,ctx,"#C2E5F8",1.3,170,canvas.width,canvas.height);
+						canvToImage(canvas);
 									
 					});
 
@@ -711,6 +711,7 @@ function replicateText(ctx,coll){
 								    	ctx.fillStyle="#FFF";
 										ctx.fillText("Jul 2013 Monthly Financial Report",130,80);
 										drawStar(canvas,ctx,"#C2E5F8",1.3,170,canvas.width,canvas.height);
+										canvToImage(canvas);
 													
 									});
 
@@ -721,9 +722,6 @@ function replicateText(ctx,coll){
 			thirdImage.src="/resources/cony_head.png";
 
 		}
-
-
-
 
 
 
