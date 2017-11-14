@@ -592,7 +592,7 @@ function replicateText(ctx,coll){
 			var imgIdx=Math.floor(Math.random()*image.length);
 			var imgGimmick=new Image();
 			imgGimmick.addEventListener('load',function(){
-					
+					//populateTextWithNoColor();
 					var svg = document.querySelector('svg');
 					var canvas = document.getElementById('canvas');
 					canvas.width=$("#image").width()
@@ -610,7 +610,12 @@ function replicateText(ctx,coll){
 						ctx.translate(10,10);
 						ctx.rotate(-20*Math.PI/180);
 						ctx.drawImage(imgGimmick, 0,30,emojiWidth,emojiHeight);
+						//replicateText(ctx,allTextPopulated);
 						ctx.restore();	
+						ctx.font = "22px grobold";
+						ctx.fillStyle="#FFF";
+						ctx.fillText("Jul 2013 Monthly Financial Report",130,80);
+						drawStar(canvas,ctx,"#C2E5F8",1.3,170,canvas.width,canvas.height);
 									
 					});
 
@@ -623,7 +628,7 @@ function replicateText(ctx,coll){
 
 
 		google.charts.load("current", {packages:["corechart"]});
-		google.charts.setOnLoadCallback(drawLineChart);
+		google.charts.setOnLoadCallback(drawBarChart);
 
 
 
@@ -637,7 +642,7 @@ function replicateText(ctx,coll){
 			thirdImage.addEventListener('load',function(){
 					secondImage.addEventListener('load',function(){
 
-									populateTextWithNoColor();
+									//populateTextWithNoColor();
 									var svg = document.querySelector('svg');
 									var canvas = document.getElementById('canvas');
 									canvas.width=$("#image").width()
@@ -701,7 +706,10 @@ function replicateText(ctx,coll){
 										ctx.drawImage(thirdImage, 0,30,thirdEmojiWidth,thirdEmojiHeight);
 										ctx.restore();	
 										
-										replicateText(ctx,allTextPopulated);
+										//replicateText(ctx,allTextPopulated);
+										ctx.font = "22px grobold";
+								    	ctx.fillStyle="#FFF";
+										ctx.fillText("Jul 2013 Monthly Financial Report",130,80);
 										drawStar(canvas,ctx,"#C2E5F8",1.3,170,canvas.width,canvas.height);
 													
 									});
@@ -807,7 +815,7 @@ function replicateText(ctx,coll){
 	          //title: 'Date'
 	          baselineColor:"#FFF"
 	        },
-	        titleTextStyle:{color:"#FFF",fontSize:23},
+	        titleTextStyle:{color:"none",fontSize:23,fontName:'Arial'},
 	        legend:{textStyle:{color:"#FFF"}},
 	        orientation:'vertical',
 	        tooltip:{trigger:'selection',textStyle:{color:"none",fontSize:19}}
