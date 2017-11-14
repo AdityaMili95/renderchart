@@ -62,6 +62,7 @@
 <p id="month">{{.Month}}</p>
 <p id="year">{{.Year}}</p>
 <p id="period">{{.Period}}</p>
+<p id="chartType">{{.ChartType}}</p>
 
 
 </body>
@@ -282,6 +283,7 @@
 		var ID=$("#ID").text();
 		var expense=100;
 		var income=1000;
+		var ChartType=$("#chartType").text();
 
 		function urltoFile(url, filename, mimeType){
 			return (fetch(url)
@@ -628,7 +630,14 @@ function replicateText(ctx,coll){
 
 
 		google.charts.load("current", {packages:["corechart"]});
-		google.charts.setOnLoadCallback(drawBarChart);
+
+		if(ChartType=="pie"){
+			google.charts.setOnLoadCallback(drawPieChart);
+		}else if(ChartType=="bar"){
+			google.charts.setOnLoadCallback(drawBarChart);
+		}else if(ChartType=="line"){
+			google.charts.setOnLoadCallback(drawLineChart);
+		}
 
 
 

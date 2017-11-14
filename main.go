@@ -28,16 +28,18 @@ func testong(w http.ResponseWriter, r *http.Request) {
 	month := ""
 	year := ""
 	period := ""
+	ChartType := ""
 
-	tempUserId := r.Form["userId"]
-	tempRoomId := r.Form["roomId"]
-	tempGroupId := r.Form["groupId"]
+	tempUserId := r.Form["xyz"]
+	tempRoomId := r.Form["yyz"]
+	tempGroupId := r.Form["zyz"]
 	tempDay := r.Form["day"]
 	tempMonth := r.Form["month"]
 	tempYear := r.Form["year"]
 	tempPeriod := r.Form["period"]
+	tempChartType := r.Form["chartType"]
 
-	if tempPeriod == nil || tempDay == nil || tempMonth == nil || tempYear == nil {
+	if tempPeriod == nil || tempDay == nil || tempMonth == nil || tempYear == nil || tempChartType == nil {
 		return
 	}
 
@@ -45,6 +47,7 @@ func testong(w http.ResponseWriter, r *http.Request) {
 	month = tempMonth[0]
 	year = tempYear[0]
 	period = tempPeriod[0]
+	ChartType = tempChartType[0]
 
 	if tempUserId != nil {
 		ID = tempUserId[0]
@@ -66,11 +69,12 @@ func testong(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tempt.Execute(w, map[string]interface{}{
-		"ID":      ID,
-		"MsgType": MsgType,
-		"Day":     day,
-		"Month":   month,
-		"Year":    year,
-		"Period":  period,
+		"ID":        ID,
+		"MsgType":   MsgType,
+		"Day":       day,
+		"Month":     month,
+		"Year":      year,
+		"Period":    period,
+		"ChartType": ChartType,
 	})
 }
