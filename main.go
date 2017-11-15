@@ -29,6 +29,7 @@ func testong(w http.ResponseWriter, r *http.Request) {
 	year := ""
 	period := ""
 	ChartType := ""
+	Data := ""
 
 	tempUserId := r.Form["xyz"]
 	tempRoomId := r.Form["yyz"]
@@ -38,8 +39,9 @@ func testong(w http.ResponseWriter, r *http.Request) {
 	tempYear := r.Form["year"]
 	tempPeriod := r.Form["period"]
 	tempChartType := r.Form["chartType"]
+	tempData := r.Form["data"]
 
-	if tempPeriod == nil || tempDay == nil || tempMonth == nil || tempYear == nil || tempChartType == nil {
+	if tempPeriod == nil || tempDay == nil || tempMonth == nil || tempYear == nil || tempChartType == nil || tempData == nil {
 		return
 	}
 
@@ -48,6 +50,7 @@ func testong(w http.ResponseWriter, r *http.Request) {
 	year = tempYear[0]
 	period = tempPeriod[0]
 	ChartType = tempChartType[0]
+	Data = tempData[0]
 
 	if tempUserId != nil {
 		ID = tempUserId[0]
@@ -76,5 +79,6 @@ func testong(w http.ResponseWriter, r *http.Request) {
 		"Year":      year,
 		"Period":    period,
 		"ChartType": ChartType,
+		"Data":      Data,
 	})
 }
