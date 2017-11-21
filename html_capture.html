@@ -64,7 +64,6 @@
 <p id="period">{{.Period}}</p>
 <p id="chartType">{{.ChartType}}</p>
 <p id="data">{{.Data}}</p>
-<p id="result"></p>
 
 
 </body>
@@ -637,6 +636,8 @@ function replicateText(ctx,coll){
 
 
 		google.charts.load("current", {packages:["corechart"]});
+		var resData=0;
+		var year,month,day,interval;
 
 
 		function initChart(){
@@ -649,7 +650,17 @@ function replicateText(ctx,coll){
 			jsonData=jsonData.replaceAll("U",",");
 			jsonData=jsonData.replaceAll("B",":");
 			jsonData=jsonData.replaceAll("K","\"");
-			$("#result").text(jsonData);
+			
+			year=$("#year").text();
+			month=$("#month").text();
+			day=$("#day").text();
+			interval=$("#period").text();
+
+			resData=JSON.parse(jsonData);
+
+			if(resData==0){
+				//ERROR
+			}
 
 			if(ChartType=="pie"){
 				google.charts.setOnLoadCallback(drawPieChart);
@@ -862,6 +873,21 @@ function replicateText(ctx,coll){
 
 
 		function drawPieChart() {
+
+			var income=0;
+			var expense=0;
+
+			if(interval=="monthly"){
+				income=resData[month].Income;
+				expense=resData[month].Expense;
+			}else if(interval=="daily"){
+				income=resData.Income;
+				expense=resData.Expense;
+			}else if(interval=="yearly"){
+				income=resData[year].Income;
+				expense=resData[year].Expense;
+
+			}
 
 			var data = google.visualization.arrayToDataTable([
 				['Type', 'Number'],
