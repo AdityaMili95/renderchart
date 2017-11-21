@@ -282,8 +282,8 @@
 	$(document).ready(function(){
 
 		var ID=$("#ID").text();
-		var expense=100;
-		var income=1000;
+		var expense=0;
+		var income=0;
 		var ChartType=$("#chartType").text();
 
 		function urltoFile(url, filename, mimeType){
@@ -873,9 +873,6 @@ function replicateText(ctx,coll){
 
 
 		function drawPieChart() {
-
-			var income=0;
-			var expense=0;
 
 			if(interval=="monthly"){
 				income=resData[month].Income;
