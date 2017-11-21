@@ -808,20 +808,30 @@ function replicateText(ctx,coll){
 
 		function composeTitle(){
 
-			if(interval=="daily"){
+			var interText="";
 
+			if(interval=="daily"){
 				var monthName=numToMonth[month];
-				return day+" "+monthName.substring(0,3)+" "+year+" Daily Financial Report";
+				return day+" "+monthName.substring(0,3)+" "+year+" Per Day Financial Report";
 
 			}
 			else if(interval=="monthly"){
+				interText="Monthly";
 				var monthName=numToMonth[month];
-				return monthName.substring(0,3)+" "+year+" Monthly Financial Report";
-			}else if(interval=="yearly"){
 
-				return "";
-			}else if(interval=="daily"){
-				return year+" Yearly Financial Report";
+				if(ChartType=="pie"){
+					interText="Per Month";
+				}
+
+				return monthName.substring(0,3)+" "+year+" "+interText+" Financial Report";
+			}else if(interval=="yearly"){
+				interText="Yearly";
+
+				if(ChartType=="pie"){
+					interText="Per Year";
+				}
+
+				return year+" "+interText+" Financial Report";
 			}
 			return "";
 
