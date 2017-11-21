@@ -621,7 +621,7 @@ function replicateText(ctx,coll){
 						ctx.restore();	
 						ctx.font = "22px grobold";
 						ctx.fillStyle="#FFF";
-						ctx.fillText("Jul 2013 Monthly Financial Report",130,80);
+						ctx.fillText(composeTitle(),130,80);
 						drawStar(canvas,ctx,"#C2E5F8",1.3,170,canvas.width,canvas.height);
 						canvToImage(canvas);
 									
@@ -638,6 +638,21 @@ function replicateText(ctx,coll){
 		google.charts.load("current", {packages:["corechart"]});
 		var resData=0;
 		var year,month,day,interval;
+
+		var numToMonth={
+			"1":"January",
+			"2":"February",
+			"3":"March",
+			"4":"April",
+			"5":"May",
+			"6":"June",
+			"7":"July",
+			"8":"August",
+			"9":"September",
+			"10":"October",
+			"11":"November",
+			"12":"December"
+		};	
 
 
 		function initChart(){
@@ -658,8 +673,11 @@ function replicateText(ctx,coll){
 
 			resData=JSON.parse(jsonData);
 
-			if(resData==0){
+
+
+			if(resData==0||(interval=="daily"&&ChartType!="pie")){
 				//ERROR
+				return;
 			}
 
 			if(ChartType=="pie"){
@@ -752,7 +770,7 @@ function replicateText(ctx,coll){
 										//replicateText(ctx,allTextPopulated);
 										ctx.font = "22px grobold";
 								    	ctx.fillStyle="#FFF";
-										ctx.fillText("Jul 2013 Monthly Financial Report",130,80);
+										ctx.fillText(composeTitle(),130,80);
 										drawStar(canvas,ctx,"#C2E5F8",1.3,170,canvas.width,canvas.height);
 										canvToImage(canvas);
 													
@@ -767,27 +785,55 @@ function replicateText(ctx,coll){
 		}
 
 
+		function getLineBarData(){
+
+			var data=[['Date', 'Income', 'Expense']]
+
+			if(interval=="monthly"){
+				var keys=Object.keys(resData);
+				for(var i=keys.length-1;i>=0;i--){
+					data.push([numToMonth[keys[i]].substring(0,3)+" "+year,resData[keys[i]].Income,resData[keys[i]].Expense]);
+				}
+
+			}else if(interval=="yearly"){
+				
+				var keys=Object.keys(resData);
+				for(var i=keys.length-1;i>=0;i--){
+					data.push([keys[i],resData[keys[i]].Income,resData[keys[i]].Expense]);
+				}
+			}
+
+			return data;
+		}
+
+		function composeTitle(){
+
+			if(interval=="daily"){
+
+				var monthName=numToMonth[month];
+				return day+" "+monthName.substring(0,3)+" "+year+" Daily Financial Report";
+
+			}
+			else if(interval=="monthly"){
+				var monthName=numToMonth[month];
+				return monthName.substring(0,3)+" "+year+" Monthly Financial Report";
+			}else if(interval=="yearly"){
+
+				return "";
+			}else if(interval=="daily"){
+				return year+" Yearly Financial Report";
+			}
+			return "";
+
+		}
+
 
 
 		function drawLineChart(){
-			var data = google.visualization.arrayToDataTable([
-		        ['Date', 'Income', 'Expense'],
-		        ['Jan 2017', 2695000, 2896000],
-		        ['Feb 2017', 2099000, 1953000],
-		        ['Mar 2017', 1526000, 1517000],
-		        ['Apr 2017', 1526000, 1517000],
-		        ['May 2017', 1526000, 1517000],
-		        ['Jun 2017', 1526000, 1517000],
-		        ['Jul 2017', 1526000, 1517000],
-		        ['Aug 2017', 1526000, 1517000],
-		        ['Sept 2017', 1526000, 1517000],
-		        ['Oct 2017', 1526000, 1517000],
-		        ['Nov 2017', 1526000, 1517000],
-		        ['Dec 2017', 1526000, 1517000]
-		      ]);
+			var data = google.visualization.arrayToDataTable(getLineBarData());
 
 			var options = {
-	          title: 'Jan 2017 Monthly Financial Report',
+	          title: composeTitle(),
 	          curveType: 'function',
 	          backgroundColor:{'fill':'none'},
 	          legend: { position: 'bottom' },
@@ -821,24 +867,10 @@ function replicateText(ctx,coll){
 		function drawBarChart() {
 
 
-	      var data = google.visualization.arrayToDataTable([
-	        ['Date', 'Income', 'Expense'],
-	        ['Jan 2017', 2695000, 2896000],
-	        ['Feb 2017', 2099000, 1953000],
-	        ['Mar 2017', 1526000, 1517000],
-	        ['Apr 2017', 1526000, 1517000],
-	        ['May 2017', 1526000, 1517000],
-	        ['Jun 2017', 1526000, 1517000],
-	        ['Jul 2017', 1526000, 1517000],
-	        ['Aug 2017', 1526000, 1517000],
-	        ['Sept 2017', 1526000, 1517000],
-	        ['Oct 2017', 1526000, 1517000],
-	        ['Nov 2017', 1526000, 1517000],
-	        ['Dec 2017', 1526000, 1517000]
-	      ]);
+	      var data = google.visualization.arrayToDataTable(getLineBarData());
 
 	      var options = {
-	        title: 'Jan 2017 Monthly Financial Report',
+	        title: composeTitle(),
 	        chartArea: {width: '60%'},
 	        colors:['#644033','#2c3e50'],
 	        backgroundColor:{fill:"#00B4EC"},
@@ -904,7 +936,7 @@ function replicateText(ctx,coll){
 			}
 
 			var options = {
-				title: 'Jul 2013 Monthly Financial Report',
+				title: composeTitle(),
 				pieHole: 0.4,
 				colors:['#644033','#2c3e50'],
 				backgroundColor:{fill:"#321F3F"},
