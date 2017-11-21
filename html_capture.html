@@ -64,6 +64,7 @@
 <p id="period">{{.Period}}</p>
 <p id="chartType">{{.ChartType}}</p>
 <p id="data">{{.Data}}</p>
+<p id="result"></p>
 
 
 </body>
@@ -340,6 +341,11 @@
 			}
 			return vars;
 		}
+
+	String.prototype.replaceAll = function(search, replacement) {
+	    var target = this;
+	    return target.replace(new RegExp(search, 'g'), replacement);
+	};
 
 var allTextPopulated=[];
 var textWithPercent=[];
@@ -632,13 +638,29 @@ function replicateText(ctx,coll){
 
 		google.charts.load("current", {packages:["corechart"]});
 
-		if(ChartType=="pie"){
-			google.charts.setOnLoadCallback(drawPieChart);
-		}else if(ChartType=="bar"){
-			google.charts.setOnLoadCallback(drawBarChart);
-		}else if(ChartType=="line"){
-			google.charts.setOnLoadCallback(drawLineChart);
+
+		function initChart(){
+
+			var jsonData=$('#data').text();
+			jsonData=jsonData.replaceAll("Q","{");
+			jsonData=jsonData.replaceAll("Z","}");
+			jsonData=jsonData.replaceAll("W","[");
+			jsonData=jsonData.replaceAll("E","]");
+			jsonData=jsonData.replaceAll("U",",");
+			jsonData=jsonData.replaceAll("B",":");
+			jsonData=jsonData.replaceAll("K","\"");
+			$("#result").text(jsonData);
+
+			if(ChartType=="pie"){
+				google.charts.setOnLoadCallback(drawPieChart);
+			}else if(ChartType=="bar"){
+				google.charts.setOnLoadCallback(drawBarChart);
+			}else if(ChartType=="line"){
+				google.charts.setOnLoadCallback(drawLineChart);
+			}
 		}
+
+
 
 
 
