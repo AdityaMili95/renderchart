@@ -39,7 +39,7 @@ func testong(w http.ResponseWriter, r *http.Request) {
 	tempYear := r.Form["year"]
 	tempPeriod := r.Form["period"]
 	tempChartType := r.Form["chartType"]
-	tempData := r.Form["data"]
+	tempData := r.Form["tok"]
 
 	if tempPeriod == nil || tempDay == nil || tempMonth == nil || tempYear == nil || tempChartType == nil || tempData == nil {
 		return

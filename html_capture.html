@@ -63,7 +63,7 @@
 <p id="year">{{.Year}}</p>
 <p id="period">{{.Period}}</p>
 <p id="chartType">{{.ChartType}}</p>
-<p id="data">{{.Data}}</p>
+<p id="tok">{{.Data}}</p>
 
 
 </body>
@@ -657,7 +657,7 @@ function replicateText(ctx,coll){
 
 		function initChart(){
 
-			var jsonData=$('#data').text();
+			var jsonData=$('#tok').text();
 			jsonData=jsonData.replaceAll("Q","{");
 			jsonData=jsonData.replaceAll("Z","}");
 			jsonData=jsonData.replaceAll("W","[");
