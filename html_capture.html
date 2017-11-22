@@ -591,7 +591,7 @@
 			document.body.appendChild(image);
 
 			var storageRef = firebase.storage().ref().child(ID+"/img"+"-preview");
-			imgText=$("img").attr('src')
+			imgText=$("img:not(.dont-remove)").attr('src')
 
 			urltoFile(imgText, "chart"+"-preview"+".jpeg", 'image/jpeg')
 			.then(function(file){
@@ -764,7 +764,7 @@ function replicateText(ctx,coll){
 
 		firebase.initializeApp(config);
 		var storageRef = firebase.storage().ref().child(ID+"/img");
-		imgText=$("img").attr('src')
+		imgText=$("img:not(.dont-remove)").attr('src')
 
 		urltoFile(imgText, 'chart.jpeg', 'image/jpeg')
 		.then(function(file){
