@@ -4,7 +4,8 @@
 	<title>Rendering</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta charset="UTF-8">
-
+	<link rel="icon" href="http://adityamili.com/images/AMIcon.ico">
+	<link rel="stylesheet" type="text/css" href="/resources/css/font-awesome.min.css">
 
 	<style type="text/css">
 
@@ -19,11 +20,11 @@
 		margin: 0;
 		font-family: grobold;
 	}
-	#image,#additional-data{
+	#image{
 		width:650px;
 		height: 650px;
 		color: white;
-		//visibility: hidden;
+		visibility: hidden;
 	}
 
 	svg{
@@ -38,8 +39,186 @@
 		top: 0;
 		width: 100%;
 		height: 100%;
-		background: white;
+		background: #21315a;
+	}
+
+	p,canvas,img{
 		display: none;
+	}
+
+	#loading-holder{
+		margin: auto;
+		width: 450px;
+		position: relative;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	#main-loading{
+		height: 300px;
+		text-align: center;
+	}
+
+	#main-loading img{
+		display: inline;
+		height: 100%;
+	}
+
+	.point{
+		height: 60px;
+	}
+
+	.circle-holder{
+		width: 80px;
+		height: 100%;
+		//background: red;
+		position: relative;
+		float: left;
+	}
+
+	.line{
+		height: 100%;
+		width: 3px;
+		margin: auto;
+		background: white;
+		transition: height 1s;
+	}
+
+	.circle{
+		width: 15px;
+		height: 15px;
+		border-radius: 100%;
+		background: white;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translateX(-50%) translateY(-50%);
+		transition: all 1s;
+	}
+
+	.text-holder{
+		width: 340px;
+		float: left;
+		height: 100%;
+		font-size: 14px;
+	}
+
+	.loading{
+		height: 100%;
+		float: left;
+		width: 30px;
+	}
+
+	.loading img{
+		display: inline;
+		width: 100%;
+		position: relative;
+		top: 50%;
+		transform: translateY(-50%);
+		opacity: 0.7;
+
+	}
+
+	span{
+		color: white;
+		margin: 0;
+		position: relative;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	u{
+		color: yellow;
+	}
+
+	.inactive *{
+		opacity:0.4;
+	}
+
+	.inactive u{
+		color: white;
+	}
+
+	.inactive .line{
+		height: 0;
+	}
+	.inactive .loading img,.done .loading img{
+		display: none;
+	}
+
+	#error.inactive{
+		display: none;
+	}
+
+	.check-done{
+		display: none;
+	}
+
+	.done .check-done{
+		display: inline;
+	}
+
+	.error-icon{
+		font-size: 22px;
+		color: red;
+		top: 55%;
+	}
+
+
+
+	@media screen and (max-width:500px){
+		#main-loading{
+			height: 200px;
+		}
+
+		#loading-holder{
+			width: 350px;
+		}
+
+		.circle-holder{
+			width: 50px;
+		}
+
+		.line{
+			width: 2px;
+		}
+
+		.circle{
+			width: 10px;
+			height: 10px;
+		}
+
+		.text-holder{
+			width: 280px;
+			font-size: 11px;
+		}
+
+		.point{
+			height: 55px;
+		}
+
+		.loading{
+			width: 20px;
+		}
+	}
+
+	@media screen and (max-width: 350px){
+		#main-loading{
+			height: 180px;
+		}
+
+		#loading-holder{
+			width: 300px;
+		}
+
+		.text-holder{
+			font-size: 10px;
+			width: 220px;
+		}
+
+		.point{
+			height: 50px;
+		}
 	}
 </style>
 
@@ -54,7 +233,6 @@
 
 <div id="image"></div>
 <canvas id="canvas"></canvas>
-<div id="bg"></div>
 
 <p id="ID">{{.ID}}</p>
 <p id="msgType">{{.MsgType}}</p>
@@ -64,6 +242,116 @@
 <p id="period">{{.Period}}</p>
 <p id="chartType">{{.ChartType}}</p>
 <p id="tok">{{.Data}}</p>
+
+
+<div id="bg">
+	
+	<div id="loading-holder">
+		<div id="main-loading">
+			<img class="dont-remove" src="resources/main-loading.gif">
+		</div>
+
+		<div id="progress">
+			
+			<div class="point inactive" id="one">
+				<div class="circle-holder">
+					<div class="line"></div>
+					<div class="circle"></div>
+				</div>
+
+				<div class="text-holder">
+					<span>Retrieving Data</span>
+				</div>
+
+				<div class="loading">
+					<img class="dont-remove" src="resources/loading.gif">
+					<span class="fa fa-check check-done"></span>
+				</div>
+
+			</div>
+
+			<div class="point inactive" id="two">
+				<div class="circle-holder">
+					<div class="line"></div>
+					<div class="circle"></div>
+				</div>
+
+				<div class="text-holder">
+					<span>Rendering Chart</span>
+				</div>
+
+				<div class="loading">
+					<img class="dont-remove" src="resources/loading.gif">
+					<span class="fa fa-check check-done"></span>
+				</div>
+			</div>
+
+			<div class="point inactive" id="three">
+				<div class="circle-holder">
+					<div class="line"></div>
+					<div class="circle"></div>
+				</div>
+
+				<div class="text-holder">
+					<span>Its Done !!</span>
+				</div>
+
+				<div class="loading">
+					<span class="fa fa-check check-done"></span>
+				</div>
+
+			</div>
+
+			<div class="point inactive" id="four">
+				<div class="circle-holder">
+					<div class="line"></div>
+					<div class="circle"></div>
+				</div>
+
+				<div class="text-holder">
+					<span>Get report by typing: <u>/get-report</u> in chat box</span>
+				</div>
+
+				<div class="loading">
+					<span class="fa fa-check check-done"></span>
+				</div>
+			</div>
+
+			<div class="point inactive" id="five">
+				<div class="circle-holder">
+					<div class="line"></div>
+					<div class="circle"></div>
+				</div>
+
+				<div class="text-holder">
+					<span>Close the Browser</span>
+				</div>
+
+				<div class="loading">
+					<span class="fa fa-check check-done"></span>
+				</div>
+			</div>
+
+			<div class="point inactive" id="error">
+				<div class="circle-holder">
+					<div class="line"></div>
+					<div class="circle"></div>
+				</div>
+
+				<div class="text-holder">
+					<span>Oops Something Happened!</span>
+				</div>
+
+				<div class="loading">
+					<span class="fa fa-remove error-icon"></span>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+
+</div>
 
 
 </body>
@@ -281,6 +569,9 @@
 
 	$(document).ready(function(){
 
+
+		$("#one").removeClass("inactive");
+
 		var ID=$("#ID").text();
 		var expense=0;
 		var income=0;
@@ -305,7 +596,7 @@
 			urltoFile(imgText, "chart"+"-preview"+".jpeg", 'image/jpeg')
 			.then(function(file){
 				storageRef.put(file).then(function(snapshot) {
-					$("img").remove()
+					$("img:not(.dont-remove)").remove()
 
 					$.ajax({
 						url:"https://wallte.herokuapp.com/replyImage",
@@ -317,7 +608,13 @@
 							'previewURL':snapshot.downloadURL
 						},
 						success:function(){
-							$("body").append("<p id='success-mark'>Success</p>")
+							$("#two").addClass("done");
+							$("#three").removeClass("inactive").addClass("done");
+							$("#four").removeClass("inactive").addClass("done");
+							$("#five").removeClass("inactive").addClass("done");
+						},
+						error:function(){
+							$("#error").removeClass("inactive");
 						}
 					});
 
@@ -472,7 +769,7 @@ function replicateText(ctx,coll){
 		urltoFile(imgText, 'chart.jpeg', 'image/jpeg')
 		.then(function(file){
 			storageRef.put(file).then(function(snapshot) {
-				$("img").remove()
+				$("img:not(.dont-remove)").remove()
 				getPreviewImage(canvas,snapshot.downloadURL);
 			});
 		})
@@ -676,9 +973,12 @@ function replicateText(ctx,coll){
 
 
 			if(resData==0||(interval=="daily"&&ChartType!="pie")){
-				//ERROR
+				$("#error").removeClass("inactive");
 				return;
 			}
+
+			$("#one").addClass("done");
+			$("#two").removeClass("inactive");
 
 			if(ChartType=="pie"){
 				google.charts.setOnLoadCallback(drawPieChart);
