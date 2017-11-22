@@ -19,6 +19,7 @@
 		height: 100%;
 		margin: 0;
 		font-family: grobold;
+		//overflow: hidden;
 	}
 	#image{
 		width:650px;
@@ -71,7 +72,6 @@
 	.circle-holder{
 		width: 80px;
 		height: 100%;
-		//background: red;
 		position: relative;
 		float: left;
 	}
@@ -309,7 +309,7 @@
 				</div>
 
 				<div class="text-holder">
-					<span>Get report by typing: <u>/get-report</u> in chat box</span>
+					<span>Get report by typing <u>/get-report</u> in chat box</span>
 				</div>
 
 				<div class="loading">
@@ -576,6 +576,7 @@
 		var expense=0;
 		var income=0;
 		var ChartType=$("#chartType").text();
+		var year,month,day,interval;
 
 		function urltoFile(url, filename, mimeType){
 			return (fetch(url)
@@ -691,7 +692,19 @@ function replicateText(ctx,coll){
 	}
 
 	function getSVGTextData(elem,coll,fill){
-		var data={x:elem.attr('x'),y:elem.attr('y'),'text':elem.text(),"size":elem.attr('font-size'),"fill":fill};
+
+		var x=elem.attr('x');
+		var y=elem.attr('y');
+		var size=$(elem)[0].getBBox();
+
+		if(elem.attr('font-family')=='horizontal'&&interval=="monthly"){
+			x-=(elem.text().length*(size.width/elem.text().length)+13);
+		}else if(elem.attr('font-family')=='horizontal'&&interval=="yearly"){
+			x-=60;
+		}
+
+		var data={x:x,y:y,'text':elem.text(),"size":elem.attr('font-size'),"fill":fill};
+
 		coll.push(data);
 		//elem.remove();
 	}
@@ -718,7 +731,7 @@ function replicateText(ctx,coll){
 		
 		$("g text").each(function(){
 
-			if($(this).attr('fill')=='none'){
+			if($(this).attr('fill')=='none'&&$(this).attr('font-family')!='grobold'){
 				getSVGTextData($(this),allTextPopulated,'#FFF');	
 			}
 			
@@ -896,7 +909,7 @@ function replicateText(ctx,coll){
 			var imgIdx=Math.floor(Math.random()*image.length);
 			var imgGimmick=new Image();
 			imgGimmick.addEventListener('load',function(){
-					//populateTextWithNoColor();
+					populateTextWithNoColor();
 					var svg = document.querySelector('svg');
 					var canvas = document.getElementById('canvas');
 					canvas.width=$("#image").width()
@@ -914,8 +927,9 @@ function replicateText(ctx,coll){
 						ctx.translate(10,10);
 						ctx.rotate(-20*Math.PI/180);
 						ctx.drawImage(imgGimmick, 0,30,emojiWidth,emojiHeight);
-						//replicateText(ctx,allTextPopulated);
 						ctx.restore();	
+
+						replicateText(ctx,allTextPopulated);
 						ctx.font = "22px grobold";
 						ctx.fillStyle="#FFF";
 						ctx.fillText(composeTitle(),130,80);
@@ -934,7 +948,7 @@ function replicateText(ctx,coll){
 
 		google.charts.load("current", {packages:["corechart"]});
 		var resData=0;
-		var year,month,day,interval;
+		
 
 		var numToMonth={
 			"1":"January",
@@ -1003,7 +1017,7 @@ function replicateText(ctx,coll){
 			thirdImage.addEventListener('load',function(){
 					secondImage.addEventListener('load',function(){
 
-									//populateTextWithNoColor();
+									populateTextWithNoColor();
 									var svg = document.querySelector('svg');
 									var canvas = document.getElementById('canvas');
 									canvas.width=$("#image").width()
@@ -1067,7 +1081,7 @@ function replicateText(ctx,coll){
 										ctx.drawImage(thirdImage, 0,30,thirdEmojiWidth,thirdEmojiHeight);
 										ctx.restore();	
 										
-										//replicateText(ctx,allTextPopulated);
+										replicateText(ctx,allTextPopulated);
 										ctx.font = "22px grobold";
 								    	ctx.fillStyle="#FFF";
 										ctx.fillText(composeTitle(),130,80);
@@ -1147,19 +1161,19 @@ function replicateText(ctx,coll){
 	          curveType: 'function',
 	          backgroundColor:{'fill':'none'},
 	          legend: { position: 'bottom' },
-	          fontName:'grobold',
+	          fontName:'Arial',
 	          orientation:'vertical',
-	           titleTextStyle:{color:"none",fontSize:23,fontName:'Arial'},
-	           legend:{textStyle:{color:"#FFF"}},
+	           titleTextStyle:{color:"none",fontSize:23,fontName:'grobold'},
+	           legend:{textStyle:{color:"none"}},
 	           hAxis: {
 		         // title: 'Total Population',
 		          minValue: 0,
 		          gridlines:{color:"#fff"},
-		          textStyle:{color:"#FFF"},
+		          textStyle:{color:"none"},
 		          baselineColor:"#FFF"
 		        },
 		        vAxis: {
-		        	textStyle:{color:"#FFF"},
+		        	textStyle:{color:"none",fontName:'horizontal'},
 		        	gridlines:{color:"#fff"},
 		          //title: 'Date'
 		          baselineColor:"#FFF"
@@ -1184,22 +1198,22 @@ function replicateText(ctx,coll){
 	        chartArea: {width: '60%'},
 	        colors:['#644033','#2c3e50'],
 	        backgroundColor:{fill:"#00B4EC"},
-	        fontName:'grobold',
+	        fontName:'Arial',
 	        hAxis: {
 	         // title: 'Total Population',
 	          minValue: 0,
 	          gridlines:{color:"#fff"},
-	          textStyle:{color:"#FFF"},
+	          textStyle:{color:"none"},
 	          baselineColor:"#FFF"
 	        },
 	        vAxis: {
-	        	textStyle:{color:"#FFF"},
+	        	textStyle:{color:"none",fontName:'horizontal'},
 	        	gridlines:{color:"#fff"},
 	          //title: 'Date'
 	          baselineColor:"#FFF"
 	        },
-	        titleTextStyle:{color:"none",fontSize:23,fontName:'Arial'},
-	        legend:{textStyle:{color:"#FFF"}},
+	        titleTextStyle:{color:"none",fontSize:23,fontName:'grobold'},
+	        legend:{textStyle:{color:"none"}},
 	        orientation:'vertical',
 	        tooltip:{trigger:'selection',textStyle:{color:"none",fontSize:19}}
 	      };
