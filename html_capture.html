@@ -19,13 +19,13 @@
 		height: 100%;
 		margin: 0;
 		font-family: grobold;
-		overflow: hidden;
+		//overflow: hidden;
 	}
 	#image{
 		width:650px;
 		height: 650px;
 		color: white;
-		visibility: hidden;
+		//visibility: hidden;
 	}
 
 	svg{
@@ -41,11 +41,11 @@
 		width: 100%;
 		height: 100%;
 		background: #21315a;
-		//visibility: hidden;	
+		visibility: hidden;	
 	}
 
 	p,canvas,img{
-		display: none;
+		//display: none;
 	}
 
 	#loading-holder{
@@ -704,6 +704,12 @@ function replicateText(ctx,coll){
 			x-=60;
 		}
 
+		if(elem.attr('font-family')=='vertical'){
+			x-=6;
+		}
+
+
+
 		var data={x:x,y:y,'text':elem.text(),"size":elem.attr('font-size'),"fill":fill};
 
 		coll.push(data);
@@ -1099,10 +1105,28 @@ function replicateText(ctx,coll){
 
 		}
 
+		function getLargestNumber(){
+
+			var largest=0;
+			var keys=Object.keys(resData);
+
+			for(var i=keys.length-1;i>=0;i--){
+				if(resData[keys[i]].Expense>0&&resData[keys[i]].Income>largest){
+					largest=resData[keys[i]].Income;
+				}
+
+				if(resData[keys[i]].Expense>0&&resData[keys[i]].Expense>largest){
+					largest=resData[keys[i]].Expense;
+				}
+			}
+			return largest;
+
+		}
 
 		function getLineBarData(){
 
-			var data=[['Date', 'Income', 'Expense']]
+			var data=[['Date', 'Income', 'Expense']];
+
 
 			if(interval=="monthly"){
 				var keys=Object.keys(resData);
@@ -1118,7 +1142,6 @@ function replicateText(ctx,coll){
 				}
 			}
 
-			console.log(data);
 			return data;
 		}
 
@@ -1169,12 +1192,14 @@ function replicateText(ctx,coll){
 	           legend:{textStyle:{color:"none"}},
 	           hAxis: {
 		         // title: 'Total Population',
+		         viewWindowMode: "explicit", viewWindow:{ min: 0 },
 		          minValue: 0,
 		          gridlines:{color:"#fff"},
-		          textStyle:{color:"none"},
+		          textStyle:{color:"none",fontName:'vertical'},
 		          baselineColor:"#FFF"
 		        },
 		        vAxis: {
+		        	minValue:0,
 		        	textStyle:{color:"none",fontName:'horizontal'},
 		        	gridlines:{color:"#fff"},
 		          //title: 'Date'
@@ -1205,7 +1230,7 @@ function replicateText(ctx,coll){
 	         // title: 'Total Population',
 	          minValue: 0,
 	          gridlines:{color:"#fff"},
-	          textStyle:{color:"none"},
+	          textStyle:{color:"none",fontName:'vertical'},
 	          baselineColor:"#FFF"
 	        },
 	        vAxis: {
