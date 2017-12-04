@@ -692,6 +692,11 @@ function replicateText(ctx,coll){
 
 	}
 
+	function isNumeric(n) {
+	  return !isNaN(parseFloat(n)) && isFinite(n);
+	}
+
+
 	function getSVGTextData(elem,coll,fill){
 
 		var x=elem.attr('x');
@@ -704,13 +709,22 @@ function replicateText(ctx,coll){
 			x-=60;
 		}
 
-		if(elem.attr('font-family')=='vertical'){
-			x-=6;
+		var text=elem.text();
+		if(elem.attr('font-family')=='this_is_value'&&ChartType!="pie"){
+			text=text.replace(/,/g,'');
+			text=formatNumSize(parseInt(text));
+		}else if(elem.attr('font-family')=='this_is_value'){
+			if(text.indexOf('%')>=0){
+				var idxParenthese=text.indexOf('(');
+				var perc=text.substring(idxParenthese);
+				text=text.substring(0,idxParenthese).replace(/,/g,'');;
+				text=formatNumSize(parseInt(text));
+				text+=" "+perc;
+			}
 		}
 
 
-
-		var data={x:x,y:y,'text':elem.text(),"size":elem.attr('font-size'),"fill":fill};
+		var data={x:x,y:y,'text':text,"size":elem.attr('font-size'),"fill":fill};
 
 		coll.push(data);
 		//elem.remove();
@@ -1195,7 +1209,7 @@ function replicateText(ctx,coll){
 		         viewWindowMode: "explicit", viewWindow:{ min: 0 },
 		          minValue: 0,
 		          gridlines:{color:"#fff"},
-		          textStyle:{color:"none",fontName:'vertical'},
+		          textStyle:{color:"none",fontName:'this_is_value'},
 		          baselineColor:"#FFF"
 		        },
 		        vAxis: {
@@ -1230,7 +1244,7 @@ function replicateText(ctx,coll){
 	         // title: 'Total Population',
 	          minValue: 0,
 	          gridlines:{color:"#fff"},
-	          textStyle:{color:"none",fontName:'vertical'},
+	          textStyle:{color:"none",fontName:'this_is_value'},
 	          baselineColor:"#FFF"
 	        },
 	        vAxis: {
@@ -1295,7 +1309,7 @@ function replicateText(ctx,coll){
 				fontSize:22,
 				fontName:'Arial',
 				pieSliceTextStyle:{color:"none"},
-				tooltip:{trigger:'selection',textStyle:{color:"none",fontSize:19}},
+				tooltip:{trigger:'selection',textStyle:{color:"none",fontSize:19,fontName:"this_is_value"}},
 				titleTextStyle:{color:"none",fontSize:23},
 				legend:{position:"right",alignment:"end",textStyle:{color:"none"}}
 			};
@@ -1323,6 +1337,22 @@ function replicateText(ctx,coll){
 
         }
     });*/
+
+    function formatNumSize(bytes) {
+	     var thresh = 1000;
+	     if(bytes < thresh) return bytes;
+	     var units = ['k','Mil','Bil','Tril','Quad','Quint','Sext','Sept','Oct','Noni','Deci'];
+	     var u = -1;
+	     do {
+
+	      if(u>=units.length)break;
+
+	         bytes /= thresh;
+	         ++u;
+	     } while(bytes >= thresh);
+
+	     return bytes.toFixed(1)+' '+units[u];
+	 };
 
     initChart();
 
